@@ -22,8 +22,16 @@ router.put("/:title", async (req, res) => {
 });
 
 router.delete("/:title", async (req, res) => {
-    await Book.findOneAndDelete({ title: req.params.title })
-    res.json({ message: "Book is deleted sucessfully" })
+    try{
+        const result = await Book.findOneAndDelete({ title: req.params.title })
+        if(result!==null)
+            res.json({ message: "Book is deleted sucessfully" })
+        else {
+            res.json({ message: "No book present with such name" })
+        }
+    } catch(err){
+        res.json({message: err.message});
+    }
 });
 router.get("/genre/:genre", async (req, res) => {
     const result = await Book.find({ genre: req.params.genre })
